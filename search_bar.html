@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  body {
+    margin: 0;
+    background: transparent;
+    font-family: Arial, sans-serif;
+  }
+
+  .search-wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    position: relative;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s ease;
+  }
+
+  .search-input:focus {
+    border-color: #1caad9;
+    box-shadow: 0 0 0 3px rgba(28,170,217,.2);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    fill: #888;
+  }
+
+  .results-box {
+    position: absolute;
+    top: 110%;
+    width: 100%;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.1);
+    overflow: hidden;
+    display: none;
+    z-index: 999;
+  }
+
+  .result-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s;
+  }
+
+  .result-item:hover {
+    background: #f3f6f9;
+  }
+
+  .result-title {
+    font-weight: 600;
+  }
+
+  .result-url {
+    font-size: 12px;
+    color: #6b7280;
+  }
+</style>
+</head>
+
+<body>
+  <div class="search-wrapper">
+    <svg class="search-icon" viewBox="0 0 24 24">
+      <path d="M21 20l-5.2-5.2a7 7 0 1 0-1.4 1.4L20 21zM10 16a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"/>
+    </svg>
+    <input id="searchInput" class="search-input" type="text" placeholder="Search..." autocomplete="off" />
+    <div id="resultsBox" class="results-box"></div>
+  </div>
+
+<script>
+const data = [
+  { title: "Digital Art Gallery", url: "/gallery", desc: "Explore featured digital artwork" },
+  { title: "Concept Art Portfolio", url: "/concept-art", desc: "High quality concept art projects" },
+  { title: "3D Models Collection", url: "/3d-models", desc: "Browse downloadable 3D assets" },
+  { title: "About the Artist", url: "/about", desc: "Learn more about the creator" },
+  { title: "Contact", url: "/contact", desc: "Get in touch" }
+];
+
+const input = document.getElementById("searchInput");
+const resultsBox = document.getElementById("resultsBox");
+
+input.addEventListener("input", () => {
+  const q = input.value.toLowerCase();
+  resultsBox.innerHTML = "";
+  if (!q) {
+    resultsBox.style.display = "none";
+    return;
+  }
+
+  const matches = data.filter(item =>
+    item.title.toLowerCase().includes(q) ||
+    item.desc.toLowerCase().includes(q)
+  );
+
+  matches.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "result-item";
+    div.innerHTML = `
+      <div class="result-title">${item.title}</div>
+      <div class="result-url">${item.url}</div>
+    `;
+    div.onclick = () => window.location.href = item.url;
+    resultsBox.appendChild(div);
+  });
+
+  resultsBox.style.display = matches.length ? "block" : "none";
+});
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search-wrapper")) {
+    resultsBox.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>
